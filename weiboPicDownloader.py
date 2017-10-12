@@ -36,8 +36,8 @@ def save_image(nickname, url):
     try:
         with open(image_path, "wb") as image_object:
             image_object.write(image)
-    except IOError:
-        print("IO Error\n")
+    except IOError as err:
+        print("IO Error\n:", str(err))
 
 
 def get_urls(containerid, page):
@@ -86,9 +86,7 @@ def handle_user(nickname):
         if has_more:
             all.extend(urls)
     count = len(all)
-    index = 0
-    for url in all:
-        index += 1
+    for index, url in enumerate(all):
         print('{} {}/{}'.format(nickname, index, count))
         pool.apply_async(save_image, args=(nickname, url))
 
