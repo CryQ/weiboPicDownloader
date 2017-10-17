@@ -4,4 +4,5 @@
 [免登录下载微博图片 爬虫 Download Weibo Images without Logging-in](
 https://github.com/yAnXImIN/weiboPicDownloader)
 
-把要爬取得微博用户的昵称添加到文件 weibo_nicknames.txt 中，多个用空格分隔。
+把要爬取的微博用户的昵称添加到文件 weibo_nicknames.txt 中，多个用空格分隔。
+
