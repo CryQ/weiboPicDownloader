@@ -44,8 +44,8 @@ def get_urls(containerid, page):
     url = URL_TEMPLATE_PAGE.format(containerid, page)
     resp_text = get(url=url).text
     json_data = json.loads(resp_text)
-    cards = json_data['cards']
-    if not cards:
+    cards = json_data['data']['cards']
+    if json_data['ok'] != 1: 
         return None
     photos = []
     for card in cards:
@@ -78,13 +78,14 @@ def handle_user(nickname):
         return
     all = []
     page = 0
-    has_more = True
-    while has_more:
+    while True:
         page += 1
         urls = get_urls(containerid=cid, page=page)
-        has_more = bool(urls)
-        if has_more:
+        # has_more = bool(urls)
+        if urls != None:
             all.extend(urls)
+        else:
+            break
     count = len(all)
     for index, url in enumerate(all):
         print('{} {}/{}'.format(nickname, index, count))
