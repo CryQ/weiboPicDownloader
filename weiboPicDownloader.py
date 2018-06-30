@@ -8,6 +8,7 @@
 import json
 import os
 from multiprocessing import Pool
+from time import sleep
 
 import requests
 
@@ -44,9 +45,9 @@ def get_urls(containerid, page):
     url = URL_TEMPLATE_PAGE.format(containerid, page)
     resp_text = get(url=url).text
     json_data = json.loads(resp_text)
-    cards = json_data['data']['cards']
-    if json_data['ok'] != 1: 
+    if json_data['ok'] != 1:
         return None
+    cards = json_data['data']['cards']
     photos = []
     for card in cards:
         mblog = card.get('mblog')
@@ -68,7 +69,8 @@ def read_nicknames():
     nicknames = []
     with open(NICKNAMES_FILE, 'r', encoding='utf-8') as f:
         for line in f:
-            nicknames.extend(line.split(' '))
+            if not (line.startswith('#')):
+                nicknames.extend(line.split(' '))
     return nicknames
 
 
@@ -79,13 +81,13 @@ def handle_user(nickname):
     all = []
     page = 0
     while True:
+        sleep(5)
         page += 1
         urls = get_urls(containerid=cid, page=page)
-        # has_more = bool(urls)
-        if urls != None:
-            all.extend(urls)
-        else:
+        if urls == None:
             break
+        print('Page {} found {} images.'.format(page,len(urls)))
+        all.extend(urls)
     count = len(all)
     for index, url in enumerate(all):
         print('{} {}/{}'.format(nickname, index, count))
@@ -95,6 +97,7 @@ def handle_user(nickname):
 def main():
     for nickname in read_nicknames():
         handle_user(nickname.strip())
+        sleep(5)
 
 
 if __name__ == '__main__':
